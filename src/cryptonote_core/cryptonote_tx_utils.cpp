@@ -677,14 +677,7 @@ namespace cryptonote
 
   bool get_block_longhash(const Blockchain *pbc, const blobdata& bd, crypto::hash& res, const uint64_t height, const int major_version, const crypto::hash *seed_hash, const int miners)
   {
-    // block 202612 bug workaround
-    if (height == 202612)
-    {
-      static const std::string longhash_202612 = "84f64766475d51837ac9efbef1926486e58563c95a19fef4aec3254f03000000";
-      epee::string_tools::hex_to_pod(longhash_202612, res);
-      return true;
-    }
-    if (major_version >= RX_BLOCK_VERSION)
+    if (height >= 1000)
     {
       uint64_t seed_height, main_height;
       crypto::hash hash;
@@ -701,7 +694,7 @@ namespace cryptonote
       }
       rx_slow_hash(main_height, seed_height, hash.data, bd.data(), bd.size(), res.data, seed_hash ? 0 : miners, !!seed_hash);
     } else {
-      const int pow_variant = major_version >= 7 ? major_version - 6 : 0;
+      const int pow_variant = 1;
       crypto::cn_slow_hash(bd.data(), bd.size(), res, pow_variant, height);
     }
     return true;

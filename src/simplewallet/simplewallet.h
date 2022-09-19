@@ -52,8 +52,8 @@
 
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "wallet.simplewallet"
-// Hardcode Monero's donation address (see #1447)
-constexpr const char MONERO_DONATION_ADDR[] = "888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H";
+// Hardcoded Dogenero's donation address
+constexpr const char MONERO_DONATION_ADDR[] = "dy2yg1VDgcRT4QPXyjpoVh5KiAZQ2pyMUR8qfiVQ7dBaZ98LeWcmLAmcDt4QdCkh8wRDz6qVwxsdKbXU4AYp3hXx2UGbKNvQU";
 
 /*!
  * \namespace cryptonote
@@ -101,7 +101,7 @@ namespace cryptonote
     boost::optional<epee::wipeable_string> new_wallet(const boost::program_options::variables_map& vm, const cryptonote::account_public_address& address,
         const boost::optional<crypto::secret_key>& spendkey, const crypto::secret_key& viewkey);
     boost::optional<epee::wipeable_string> new_wallet(const boost::program_options::variables_map& vm,
-        const epee::wipeable_string &multisig_keys, const epee::wipeable_string &seed_pass, const std::string &old_language);
+        const epee::wipeable_string &multisig_keys, const std::string &old_language);
     boost::optional<epee::wipeable_string> new_wallet(const boost::program_options::variables_map& vm);
     boost::optional<epee::wipeable_string> open_wallet(const boost::program_options::variables_map& vm);
     bool close_wallet();
@@ -429,6 +429,7 @@ namespace cryptonote
     bool m_restore_deterministic_wallet;  // recover flag
     bool m_restore_multisig_wallet;  // recover flag
     bool m_non_deterministic;  // old 2-random generation
+    bool m_allow_mismatched_daemon_version;
     bool m_restoring;           // are we restoring, by whatever method?
     uint64_t m_restore_height;  // optional
     bool m_do_not_relay;

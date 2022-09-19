@@ -2476,7 +2476,7 @@ skip:
         }
       }
       MGINFO_YELLOW(ENDL << "**********************************************************************" << ENDL
-        << "You are now synchronized with the network. You may now start monero-wallet-cli." << ENDL
+        << "You are now synchronized with the network. You may now start dogenero-wallet-cli." << ENDL
         << ENDL
         << "Use the \"help\" command to see the list of available commands." << ENDL
         << "**********************************************************************");
@@ -2496,6 +2496,8 @@ skip:
         }
       }
       m_core.on_synchronized();
+    } else {
+      MGINFO_YELLOW("DEBUG TODO - isn't within compiled block hash area");
     }
     m_core.safesyncmode(true);
     m_p2p->clear_used_stripe_peers();

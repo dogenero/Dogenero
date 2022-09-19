@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2022, The Monero Project
+// Copyright (c) 2014-2022, The Dogenero Project
 //
 // All rights reserved.
 //
@@ -26,6 +26,7 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// Parts of this file are originally copyright (c) 2014-2022 The Monero Project
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
 #include <algorithm>
@@ -2346,9 +2347,9 @@ bool Blockchain::get_output_distribution(uint64_t amount, uint64_t from_height, 
   {
     switch (m_nettype)
     {
-      case STAGENET: start_height = stagenet_hard_forks[3].height; break;
-      case TESTNET: start_height = testnet_hard_forks[3].height; break;
-      case MAINNET: start_height = mainnet_hard_forks[3].height; break;
+      case STAGENET: start_height = stagenet_hard_forks[1].height; break;
+      case TESTNET: start_height = testnet_hard_forks[1].height; break;
+      case MAINNET: start_height = mainnet_hard_forks[1].height; break;
       case FAKECHAIN: start_height = 0; break;
       default: return false;
     }
@@ -3321,7 +3322,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
     size_t n_unmixable = 0, n_mixable = 0;
     size_t min_actual_mixin = std::numeric_limits<size_t>::max();
     size_t max_actual_mixin = 0;
-    const size_t min_mixin = hf_version >= HF_VERSION_MIN_MIXIN_15 ? 15 : hf_version >= HF_VERSION_MIN_MIXIN_10 ? 10 : hf_version >= HF_VERSION_MIN_MIXIN_6 ? 6 : hf_version >= HF_VERSION_MIN_MIXIN_4 ? 4 : 2;
+    const size_t min_mixin = hf_version >= HF_VERSION_MIN_MIXIN_19 ? 19 : 2;
     for (const auto& txin : tx.vin)
     {
       // non txin_to_key inputs will be rejected below
@@ -3368,7 +3369,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
     // allowed is when spending unmixable non-RCT outputs in the chain.
     // Caveat: at HF_VERSION_MIN_MIXIN_15, temporarily allow ring sizes
     // of 11 to allow a grace period in the transition to larger ring size.
-    if (min_actual_mixin < min_mixin && !(hf_version == HF_VERSION_MIN_MIXIN_15 && min_actual_mixin == 10))
+    if (min_actual_mixin < min_mixin)
     {
       if (n_unmixable == 0)
       {
@@ -3382,15 +3383,6 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
         tvc.m_low_mixin = true;
         return false;
       }
-    } else if ((hf_version > HF_VERSION_MIN_MIXIN_15 && min_actual_mixin > 15)
-      || (hf_version == HF_VERSION_MIN_MIXIN_15 && min_actual_mixin != 15 && min_actual_mixin != 10) // grace period to allow either 15 or 10
-      || (hf_version < HF_VERSION_MIN_MIXIN_15 && hf_version >= HF_VERSION_MIN_MIXIN_10+2 && min_actual_mixin > 10)
-      || ((hf_version == HF_VERSION_MIN_MIXIN_10 || hf_version == HF_VERSION_MIN_MIXIN_10+1) && min_actual_mixin != 10)
-    )
-    {
-      MERROR_VER("Tx " << get_transaction_hash(tx) << " has invalid ring size (" << (min_actual_mixin + 1) << "), it should be " << (min_mixin + 1));
-      tvc.m_low_mixin = true;
-      return false;
     }
 
     // min/max tx version based on HF, and we accept v1 txes if having a non mixable
@@ -4780,7 +4772,7 @@ void Blockchain::check_against_checkpoints(const checkpoints& points, bool enfor
       }
       else
       {
-        LOG_ERROR("WARNING: local blockchain failed to pass a MoneroPulse checkpoint, and you could be on a fork. You should either sync up from scratch, OR download a fresh blockchain bootstrap, OR enable checkpoint enforcing with the --enforce-dns-checkpointing command-line option");
+        LOG_ERROR("WARNING: local blockchain failed to pass a Dogenero checkpoint, and you could be on a fork. You should either sync up from scratch, OR download a fresh blockchain bootstrap, OR enable checkpoint enforcing with the --enforce-dns-checkpointing command-line option");
       }
     }
   }
@@ -5698,11 +5690,12 @@ void Blockchain::load_compiled_in_block_hashes(const GetCheckpointsCallback& get
 
 bool Blockchain::is_within_compiled_block_hash_area(uint64_t height) const
 {
-#if defined(PER_BLOCK_CHECKPOINT)
+  return false;
+  /*#if defined(PER_BLOCK_CHECKPOINT)
   return height < m_blocks_hash_of_hashes.size() * HASH_OF_HASHES_STEP;
 #else
   return false;
-#endif
+#endif*/
 }
 
 void Blockchain::lock()
