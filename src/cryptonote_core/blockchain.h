@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2022, The Monero Project
+// Copyright (c) 2022, The Dogenero Project
 //
 // All rights reserved.
 //
@@ -26,6 +26,7 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// Parts of this file are originally copyright (c) 2014-2022 The Monero Project
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
 #pragma once
@@ -458,6 +459,20 @@ namespace cryptonote
      * @return true if a block found in common, else false
      */
     bool find_blockchain_supplement(const std::list<crypto::hash>& qblock_ids, bool clip_pruned, NOTIFY_RESPONSE_CHAIN_ENTRY::request& resp) const;
+
+    /**
+     * @brief get a set of blockchain checkpoint hashes
+     *
+     * @return set of blockchain checkpoint hashes
+     */
+    const checkpoints& get_checkpoints() const { return m_checkpoints; }
+
+    /**
+     * @brief returns info for all known hard forks
+     *
+     * @return the hardforks
+     */
+    const std::vector<hardfork_t>& get_hardforks() const { return m_hardfork->get_hardforks(); }
 
     /**
      * @brief find the most recent common point between ours and a foreign chain
